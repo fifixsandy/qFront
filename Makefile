@@ -16,7 +16,7 @@ $(BIN):
 	cd $(BUILD_DIR) && cmake .. 
 	cd $(BUILD_DIR) && make
 	@mv -f $(BIN) .
-	@echo "Build complete: $(BIN)"
+	@echo "Moving $(BIN) to root..."
 
 # Clean build directory
 clean:
