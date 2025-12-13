@@ -71,11 +71,16 @@ struct CompositeGateBody {
 
 struct GateDef {
     std::string name;
-    std::size_t num_qubits;
+
+    std::vector<std::string> argument_qubits;
+    std::vector<std::string> parameters;
+
+    std::unordered_map<std::string, std::size_t> argument_index;
+    std::unordered_map<std::string, std::size_t> parameter_index;
+
     GateKind kind;
     std::variant<AtomicGateSemantics, CompositeGateBody> semantics;
 };
-
 struct ProgramNodeBase;
 struct GateApplication;
 struct LoopApplication;
@@ -118,6 +123,10 @@ public:
     std::size_t addGate(const GateDef& def);
     const GateDef& getGate(std::size_t id) const;
     const GateDef& getGate(const std::string& name) const;
+    GateDef& getGate(std::size_t id);
+    GateDef& getGate(const std::string& name);
+    const std::vector<GateDef> getAllGates() const;
+    const idGate getGateId(std::string name) const;
     bool hasGate(const std::string& name) const;
 
     // Program

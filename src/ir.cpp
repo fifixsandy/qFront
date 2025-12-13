@@ -65,10 +65,20 @@ const GateDef& IR::getGate(const std::string& name) const {
     return gates[it->second];
 }
 
+GateDef& IR::getGate(std::size_t id) { return gates.at(id); }
+GateDef& IR::getGate(const std::string& name) { return gates.at(gate_table.at(name)); }
+
 const std::vector<GateDef> IR::getAllGates() const {
     return this->gates;
 }
 
+const idGate IR::getGateId(std::string name) const {
+    auto it = gate_table.find(name);
+    if (it == gate_table.end()) {
+        throw std::runtime_error("Gate not found: " + name);
+    }
+    return it->second;
+}
 
 bool IR::hasGate(const std::string& name) const {
     return gate_table.find(name) != gate_table.end();
