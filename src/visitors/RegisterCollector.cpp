@@ -17,8 +17,7 @@
 RegisterCollector::RegisterCollector(IR& ir) : _ir(ir) {}
 
 std::any RegisterCollector::visitQuantumDeclarationStatement(
-    qasm3Parser::QuantumDeclarationStatementContext *ctx) 
-{
+    qasm3Parser::QuantumDeclarationStatementContext *ctx) {
     RegisterDef reg;
     reg.name = ctx->Identifier()->getText();
     reg.type = RegisterType::Qubit;

@@ -6,7 +6,7 @@
 #include "../antlr/parser/qasm3ParserBaseVisitor.h"
 #include "../inc/ir.hpp"
 #include "../inc/visitors/RegisterCollector.hpp"
-
+#include "../inc/visitors/GateDefinitionsCollector.hpp"
 using namespace antlr4;
 
 int main(int argc, const char* argv[]) {
@@ -34,14 +34,24 @@ int main(int argc, const char* argv[]) {
     IR ir;
     RegisterCollector regColector(ir);
     regColector.visit(tree);
-
+    GateDefinitionsCollector gateCollector(ir);
+    gateCollector.visit(tree);
     for (auto r : ir.getAllRegisters()) {
-        std::cout << "Name: " << r.name << " Size: " << r.size << " Kind: ";
+        std::cout << "Register Name: " << r.name << " Size: " << r.size << " Kind: ";
         if (r.kind == RegisterKind::Parametric) {
             std::cout << "Parametric" << std::endl;
         } else {
             std::cout << "Nonparametric" << std::endl;
         }
+    }
+
+    for (auto g : ir.getAllGates()) {
+        std::cout<< "Gate Name: " << g.name << " num_qubits: " << g.argument_qubits.size()\
+        << "arg names: ";
+        for (auto q : g.argument_qubits) {
+            std::cout << q << " ";
+        }
+        std::cout << std::endl;
     }
 
     return 0;

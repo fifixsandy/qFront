@@ -65,6 +65,11 @@ const GateDef& IR::getGate(const std::string& name) const {
     return gates[it->second];
 }
 
+const std::vector<GateDef> IR::getAllGates() const {
+    return this->gates;
+}
+
+
 bool IR::hasGate(const std::string& name) const {
     return gate_table.find(name) != gate_table.end();
 }
