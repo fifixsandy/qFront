@@ -42,7 +42,7 @@ std::any GateHeadersCollector::visitGateStatement(
         }
     }
 
-    gate.semantics = CompositeGateBody{}
+    gate.semantics = CompositeGateBody{};
     _ir.addGate(gate);
     return nullptr;
 }
