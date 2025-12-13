@@ -35,12 +35,23 @@ cleanall: clean
 # Download ANTLR jar and generate Cpp parser/lexer
 antlr:
 	@echo "Downloading ANTLR jar if needed..."
-	@mkdir -p antlr
 	@test -f $(ANTLR_JAR) || \
 		wget -O $(ANTLR_JAR) https://www.antlr.org/download/antlr-$(ANTLR_VERSION)-complete.jar
-	@echo "Generating Cpp parser and lexer..."
-	@mkdir -p $(PARSER_DIR)
-	java -jar $(ANTLR_JAR) -Dlanguage=Cpp -visitor -o $(PARSER_DIR) antlr/qasm3Lexer.g4 antlr/qasm3Parser.g4
+
+	@echo "Generating lexer..."
+	java -jar $(ANTLR_JAR) \
+		-Dlanguage=Cpp \
+		-o antlr/parser \
+		antlr/qasm3Lexer.g4
+
+	@echo "Generating parser..."
+	java -jar $(ANTLR_JAR) \
+		-Dlanguage=Cpp \
+		-visitor \
+		-lib antlr/parser/antlr\
+		-o antlr/parser \
+		antlr/qasm3Parser.g4
+
 	@echo "Moving generated files to $(PARSER_DIR)..."
 	@mv -f $(PARSER_DIR)/antlr/* $(PARSER_DIR)/ 2>/dev/null || true
 	@rm -rf $(PARSER_DIR)/antlr
