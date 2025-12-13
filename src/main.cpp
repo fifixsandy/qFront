@@ -6,7 +6,10 @@
 #include "../antlr/parser/qasm3ParserBaseVisitor.h"
 #include "../inc/ir.hpp"
 #include "../inc/visitors/RegisterCollector.hpp"
-#include "../inc/visitors/GateDefinitionsCollector.hpp"
+#include "../inc/visitors/GateHeadersCollector.hpp"
+#include "../inc/visitors/GateBodyCollector.hpp"
+#include "../inc/temp_printer.hpp"
+
 using namespace antlr4;
 
 int main(int argc, const char* argv[]) {
@@ -34,25 +37,13 @@ int main(int argc, const char* argv[]) {
     IR ir;
     RegisterCollector regColector(ir);
     regColector.visit(tree);
-    GateDefinitionsCollector gateCollector(ir);
+    GateHeadersCollector gateCollector(ir);
     gateCollector.visit(tree);
-    for (auto r : ir.getAllRegisters()) {
-        std::cout << "Register Name: " << r.name << " Size: " << r.size << " Kind: ";
-        if (r.kind == RegisterKind::Parametric) {
-            std::cout << "Parametric" << std::endl;
-        } else {
-            std::cout << "Nonparametric" << std::endl;
-        }
-    }
+    GateBodyCollector gateBodyCollector(ir);
+    gateBodyCollector.visit(tree);
 
-    for (auto g : ir.getAllGates()) {
-        std::cout<< "Gate Name: " << g.name << " num_qubits: " << g.argument_qubits.size()\
-        << "arg names: ";
-        for (auto q : g.argument_qubits) {
-            std::cout << q << " ";
-        }
-        std::cout << std::endl;
-    }
+    printGateTable(ir);
+    printRegisterTable(ir);
 
     return 0;
 }
