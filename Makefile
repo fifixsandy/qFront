@@ -34,18 +34,14 @@ cleanall: clean
 
 # Download ANTLR jar and generate Cpp parser/lexer
 antlr:
-	@echo "Downloading ANTLR jar if needed..."
-	@test -f $(ANTLR_JAR) || \
-		wget -O $(ANTLR_JAR) https://www.antlr.org/download/antlr-$(ANTLR_VERSION)-complete.jar
-
 	@echo "Generating lexer..."
-	java -jar $(ANTLR_JAR) \
+	antlr4 \
 		-Dlanguage=Cpp \
 		-o antlr/parser \
 		antlr/qasm3Lexer.g4
 
 	@echo "Generating parser..."
-	java -jar $(ANTLR_JAR) \
+	antlr4 \
 		-Dlanguage=Cpp \
 		-visitor \
 		-lib antlr/parser/antlr\

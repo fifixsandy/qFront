@@ -15,6 +15,7 @@ target_include_directories(qfront PRIVATE
     antlr/parser
     /usr/local/include
     /usr/local/include/antlr4-runtime
+    /usr/include/antlr4-runtime
 )
 
 target_link_libraries(qfront PRIVATE antlr4-runtime)
