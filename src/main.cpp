@@ -1,3 +1,4 @@
+#include <cstdio>
 #include <iostream>
 #include <fstream>
 #include <antlr4-runtime/antlr4-runtime.h>
@@ -10,6 +11,7 @@
 #include "../inc/visitors/GateBodyCollector.hpp"
 #include "../inc/visitors/ProgramCollector.hpp"
 #include "../inc/temp_printer.hpp"
+#include "../inc/AtomicGateLoader.hpp"
 
 using namespace antlr4;
 
@@ -35,6 +37,10 @@ int main(int argc, const char* argv[]) {
     //std::cout << "Parsed successfully!\n";
 
     IR ir;
+    auto gates = loadGates("gates.json");
+    for (auto gate : gates) {
+        ir.addGate(gate);
+    }
     RegisterCollector regColector(ir);
     regColector.visit(tree);
     GateHeadersCollector gateCollector(ir);

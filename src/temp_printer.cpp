@@ -31,8 +31,9 @@ void printGate(const GateDef& gate, const IR& ir, int indentLvl) {
               << ".num_qubits = " << gate.argument_qubits.size() << ",\n";
 
     if (gate.kind == GateKind::Atomic) {
-        std::cout << indent(indentLvl + 2)
-                  << "Matrix(...)\n";
+        std::cout << indent(indentLvl + 2);
+        const auto& semant = std::get<AtomicGateSemantics>(gate.semantics);
+        std::cout << indent(indentLvl + 2) << "Matrix(" << semant.matrix << ")\n";
     } else {
         const auto& body =
             std::get<CompositeGateBody>(gate.semantics).body;
@@ -58,6 +59,8 @@ void printGateTable(const IR& ir) {
 
     const auto& gates = ir.getAllGates();
     for (size_t i = 0; i < gates.size(); ++i) {
+        if (!gates[i].used) {continue;} // not necessary to print, nowhere used
+
         printGate(gates[i], ir, 2);
         if (i + 1 < gates.size())
             std::cout << ",";

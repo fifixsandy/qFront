@@ -29,6 +29,7 @@ std::any GateBodyCollector::visitGateCallStatement(
 
     placement.gate_name = ctx->Identifier()->getText();
     placement.gate_id = _ir.getGateId(placement.gate_name);
+    _ir.markGateUsed(placement.gate_id);
     auto operandCtxs = ctx->gateOperandList()->gateOperand();
 
     for (auto operandCtx : operandCtxs ) {

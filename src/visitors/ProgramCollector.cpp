@@ -24,6 +24,7 @@ std::any ProgramCollector::visitGateCallStatement(
     auto gate_name = ctx->Identifier()->getText();
     application.gate_id = _ir.getGateId(gate_name);
     auto operandCtxs = ctx->gateOperandList()->gateOperand();
+    _ir.markGateUsed(application.gate_id);
 
     for (auto* operandCtx : operandCtxs) {
         auto* indexed = operandCtx->indexedIdentifier();

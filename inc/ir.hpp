@@ -71,6 +71,7 @@ struct CompositeGateBody {
 
 struct GateDef {
     std::string name;
+    std::vector<std::string> aliases;
 
     std::vector<std::string> argument_qubits;
     std::vector<std::string> parameters;
@@ -148,6 +149,9 @@ public:
     const std::vector<GateDef> getAllGates() const;
     const idGate getGateId(std::string name) const;
     bool hasGate(const std::string& name) const;
+    void markGateUsed(const std::string& name);
+    void markGateUsed(std::size_t id);
+
 
     // Program
     void addProgramNode(ProgramNodePtr node);

@@ -53,11 +53,24 @@ std::size_t IR::addGate(const GateDef& def) {
     if (hasGate(def.name)) {
         throw std::runtime_error("Gate already exists: " + def.name);
     }
+
     std::size_t id = gates.size();
     gates.push_back(def);
+
+    // register canonical name
     gate_table[def.name] = id;
+
+    // register aliases
+    for (const auto& alias : def.aliases) {
+        if (hasGate(alias)) {
+            throw std::runtime_error("Alias already exists: " + alias);
+        }
+        gate_table[alias] = id;
+    }
+
     return id;
 }
+
 
 const GateDef& IR::getGate(std::size_t id) const {
     if (id >= gates.size()) {
@@ -76,6 +89,22 @@ const GateDef& IR::getGate(const std::string& name) const {
 
 GateDef& IR::getGate(std::size_t id) { return gates.at(id); }
 GateDef& IR::getGate(const std::string& name) { return gates.at(gate_table.at(name)); }
+
+void IR::markGateUsed(std::size_t id) {
+    if (id >= gates.size()) {
+        throw std::out_of_range("Invalid gate id");
+    }
+    gates[id].used = true;
+}
+
+void IR::markGateUsed(const std::string& name) {
+    auto it = gate_table.find(name);
+    if (it == gate_table.end()) {
+        throw std::runtime_error("Unknown gate: " + name);
+    }
+    gates[it->second].used = true;
+}
+
 
 const std::vector<GateDef> IR::getAllGates() const {
     return this->gates;
