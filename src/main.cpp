@@ -8,6 +8,7 @@
 #include "../inc/visitors/RegisterCollector.hpp"
 #include "../inc/visitors/GateHeadersCollector.hpp"
 #include "../inc/visitors/GateBodyCollector.hpp"
+#include "../inc/visitors/ProgramCollector.hpp"
 #include "../inc/temp_printer.hpp"
 
 using namespace antlr4;
@@ -28,7 +29,6 @@ int main(int argc, const char* argv[]) {
     qasm3Lexer lexer(&input);
     CommonTokenStream tokens(&lexer);
     qasm3Parser parser(&tokens);
-    parser.removeErrorListeners();
 
     tree::ParseTree* tree = parser.program();
     //std::cout << tree->toStringTree() << "\n";
@@ -41,9 +41,14 @@ int main(int argc, const char* argv[]) {
     gateCollector.visit(tree);
     GateBodyCollector gateBodyCollector(ir);
     gateBodyCollector.visit(tree);
+    ProgramCollector programCollector(ir);
+    programCollector.visit(tree);
 
+    std::cout << "ParametricProgram program = {\n";
     printGateTable(ir);
     printRegisterTable(ir);
-
+    printTransducerDefs(ir);
+    printProgram(ir);
+    std::cout << "}";
     return 0;
 }

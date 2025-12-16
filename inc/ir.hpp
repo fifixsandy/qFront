@@ -35,12 +35,12 @@ struct RegisterDef {
     std::string name;
     RegisterKind kind;
     RegisterType type;
-    long size; // -1 if kind is parametric
+    std::string size;
 };
 
 struct RegisterRef {
     idRegister reg_id;
-    std::ptrdiff_t qubit_index;
+    std::string qubit_index;
 };
 
 struct IndexExpr {
@@ -56,7 +56,7 @@ enum class GateKind {
 };
 
 struct AtomicGateSemantics {
-    // TODO: matrix or other atomic operations
+    std::string matrix;
 };
 
 struct GatePlacement {
@@ -80,6 +80,7 @@ struct GateDef {
 
     GateKind kind;
     std::variant<AtomicGateSemantics, CompositeGateBody> semantics;
+    bool used = false;
 };
 struct ProgramNodeBase;
 struct GateApplication;
@@ -97,11 +98,29 @@ struct GateApplication : ProgramNodeBase {
     std::vector<RegisterRef> operands;
 };
 
+struct Interval {
+    std::string start;
+    std::string step = "1";
+    std::string end;
+};
+
+using LoopValues = std::variant<
+    Interval,                  // [start : step : end]
+    std::vector<std::string>,  // {1, 5, 10}
+    std::string                // identifier / expression (e.g. my_array)
+>;
+
 struct LoopApplication : ProgramNodeBase {
-    IndexExpr start;
-    IndexExpr end;
-    std::ptrdiff_t step;
-    std::vector<ProgramNodePtr> body; // recursive
+    // for uint i in [0:n-2]
+
+    // for int[32] j in {1, 5, 10}
+
+    // array[float[64], 4] my_floats = {1.2, -3.4, 0.5, 9.8};
+    // for float[64] f in my_floats
+    std::string type; // uint | int[32] | float[64]
+    std::string variable; // i | j | f
+    LoopValues values;
+    std::vector<ProgramNodePtr> body;
 };
 
 struct ConditionalApplication : ProgramNodeBase {
@@ -116,6 +135,7 @@ public:
     std::size_t addRegister(const RegisterDef& def);
     const RegisterDef& getRegister(std::size_t id) const;
     const RegisterDef& getRegister(const std::string& name) const;
+    const idRegister getRegisterId(std::string name) const;
     const std::vector<RegisterDef> getAllRegisters() const;
     bool hasRegister(const std::string& name) const;
 
@@ -132,6 +152,8 @@ public:
     // Program
     void addProgramNode(ProgramNodePtr node);
     const std::vector<ProgramNodePtr>& getProgram() const;
+    std::vector<ProgramNodePtr>& getProgram();
+
 
 private:
     std::vector<RegisterDef> registers;

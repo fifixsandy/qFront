@@ -30,11 +30,10 @@ std::any RegisterCollector::visitQuantumDeclarationStatement(
         auto expr = designator->expression();
         if (auto size = parse_utils::tryExtractIntConst(expr)) {
             reg.kind = RegisterKind::Nonparametric;
-            reg.size = *size;
+            reg.size = expr->getText();
         } else {
-            // TODO: save the parameters as custom expression ?
             reg.kind = RegisterKind::Parametric;
-            reg.size = -1;
+            reg.size = expr->getText();
         }
     } else {
         reg.kind = RegisterKind::Nonparametric;

@@ -31,7 +31,16 @@ const RegisterDef& IR::getRegister(const std::string& name) const {
     }
     return registers[it->second];
 }
-    
+
+const idRegister IR::getRegisterId(std::string name) const {
+    auto it = register_table.find(name);
+    if (it == register_table.end()) {
+        throw std::runtime_error("Register not found: " + name);
+    }
+    return it->second;
+}
+
+
 const std::vector<RegisterDef> IR::getAllRegisters() const {
     return this->registers;
 }
@@ -83,5 +92,18 @@ const idGate IR::getGateId(std::string name) const {
 bool IR::hasGate(const std::string& name) const {
     return gate_table.find(name) != gate_table.end();
 }
+
+void IR::addProgramNode(ProgramNodePtr node) {
+    program.push_back(std::move(node));
+}
+
+std::vector<ProgramNodePtr>& IR::getProgram() {
+    return this->program;
+}
+
+const std::vector<ProgramNodePtr>& IR::getProgram() const {
+    return this->program;
+}
+
 
 /* EOF ir.cpp */

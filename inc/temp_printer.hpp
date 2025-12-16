@@ -9,3 +9,5 @@ void printGatePlacement(const GatePlacement& p, int indentLvl);
 void printGate(const GateDef& gate, const IR& ir, int indentLvl);
 void printGateTable(const IR& ir);
 void printRegisterTable(const IR& ir);
+void printTransducerDefs(const IR& ir);
+void printProgram(const IR& ir);
