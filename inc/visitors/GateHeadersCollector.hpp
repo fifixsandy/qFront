@@ -5,7 +5,7 @@
  */
 
 #pragma once
-#include <antlr4-runtime/antlr4-runtime.h>
+#include "antlr4-runtime.h"
 #include "../antlr/parser/qasm3Lexer.h"
 #include "../antlr/parser/qasm3Parser.h"
 #include "../antlr/parser/qasm3ParserBaseVisitor.h"
