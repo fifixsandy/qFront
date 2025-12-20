@@ -23,7 +23,7 @@ gate uma cin, b, a { // UnMajority and Add
 qubit[n] a;     // first operand
 qubit[n] b;     // second operand (and result in the end)
 qubit c0;       // initial carry
-qubit z;        // ancilla
+qubit zq;        // ancilla
 
 // pre: a, b: operands, c0 = z = 0
 
@@ -34,7 +34,7 @@ for uint i in [0:n-2] {
 	maj	a[i], b[i+1], a[i+1];
 }
 
-cnot a[n-1], z; // working with ancilla
+cnot a[n-1], zq; // working with ancilla
 
 // second staircase (upwards)
 for uint i in [n-2:-1:0] {

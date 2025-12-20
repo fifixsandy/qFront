@@ -1,7 +1,7 @@
 /**
  * @file GateHeadersCollector.cpp
  * @author Filip Novak
- * @date 2025-12-13
+ * @date 2025-12-20
  * 
  * Implements the GateHeadersCollector visitor, which traverses the OpenQASM 3
  * parse tree and populates the IR with gate headers.
@@ -10,7 +10,7 @@
 #include "../../inc/visitors/GateHeadersCollector.hpp"
 #include "../../inc/utils.hpp"
 
-GateHeadersCollector::GateHeadersCollector(IR& ir) : _ir(ir) {}
+GateHeadersCollector::GateHeadersCollector(IR& ir, ScopeManager& scopes) : _ir(ir), _scopes(scopes) {}
 
 std::any GateHeadersCollector::visitGateStatement(
     qasm3Parser::GateStatementContext *ctx) {
@@ -43,7 +43,15 @@ std::any GateHeadersCollector::visitGateStatement(
     }
 
     gate.semantics = CompositeGateBody{};
-    _ir.addGate(gate);
+
+    auto id = _ir.addGate(gate);
+
+    _scopes.addSymbol(Symbol{
+        .name = gate.name,
+        .kind = SymbolKind::Gate,
+        .ir_ref = id,
+    });
+    
     return nullptr;
 }
 

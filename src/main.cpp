@@ -12,6 +12,7 @@
 #include "../inc/visitors/ProgramCollector.hpp"
 #include "../inc/temp_printer.hpp"
 #include "../inc/AtomicGateLoader.hpp"
+#include "ScopeManager.hpp"
 
 using namespace antlr4;
 
@@ -37,17 +38,23 @@ int main(int argc, const char* argv[]) {
     //std::cout << "Parsed successfully!\n";
 
     IR ir;
+    ScopeManager scopes;
     auto gates = loadGates("gates.json");
     for (auto gate : gates) {
-        ir.addGate(gate);
+        auto id = ir.addGate(gate);
+        Symbol sym;
+        sym.name = gate.name;
+        sym.aliases = gate.aliases;
+        sym.ir_ref = id;
+        scopes.addSymbol(std::move(sym));
     }
-    RegisterCollector regColector(ir);
+    RegisterCollector regColector(ir, scopes);
     regColector.visit(tree);
-    GateHeadersCollector gateCollector(ir);
+    GateHeadersCollector gateCollector(ir, scopes);
     gateCollector.visit(tree);
-    GateBodyCollector gateBodyCollector(ir);
+    GateBodyCollector gateBodyCollector(ir, scopes);
     gateBodyCollector.visit(tree);
-    ProgramCollector programCollector(ir);
+    ProgramCollector programCollector(ir, scopes);
     programCollector.visit(tree);
 
     std::cout << "ParametricProgram program = {\n";

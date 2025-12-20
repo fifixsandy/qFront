@@ -1,13 +1,13 @@
 /**
  * @file ProgramCollector.cpp
  * @author Filip Novak
- * @date 2025-12-15
+ * @date 2025-12-20
  */
 
 #include "../../inc/visitors/ProgramCollector.hpp"
 #include "../../inc/utils.hpp"
 
-ProgramCollector::ProgramCollector(IR& ir) : _ir(ir) {
+ProgramCollector::ProgramCollector(IR& ir, ScopeManager& scopes) : _ir(ir), _scopes(scopes) {
     program_stack.push_back(&ir.getProgram());
 }
 
@@ -79,7 +79,6 @@ std::any ProgramCollector::visitForStatement(
         if (exprs.size() == 3)
             interval.step = exprs[1]->getText();
 
-        loop->values = interval;
         loop->values = interval;
     }
     else if (auto *set = ctx->setExpression()) {

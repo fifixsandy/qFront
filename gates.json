@@ -1,7 +1,7 @@
 {
   "gates": [
     {
-        "names": ["x", "not"],
+        "names": ["x", "not", "X", "NOT"],
         "num_qubits": 1,
         "matrix": [
             [0, 1],
@@ -9,7 +9,7 @@
         ]
     },
     {
-      "names": ["cx", "cnot"],
+      "names": ["cx", "cnot", "CX", "CNOT"],
       "num_qubits": 2,
       "matrix": [
         [1, 0, 0, 0],
@@ -19,7 +19,7 @@
       ]
     },
     {
-      "names": ["ccx"],
+      "names": ["ccx", "CCX"],
       "num_qubits": 3,
       "matrix": [
         [1, 0, 0, 0, 0, 0, 0, 0],
@@ -33,7 +33,7 @@
       ]
     },
     {
-      "names": ["y"],
+      "names": ["y", "Y"],
       "num_qubits": 1,
       "matrix": [
         [0, -1],
@@ -41,7 +41,7 @@
       ]
     },
     {
-      "names": ["z"],
+      "names": ["z", "Z"],
       "num_qubits": 1,
       "matrix": [
         [1, 0],
@@ -49,7 +49,7 @@
       ]
     },
     {
-      "names": ["h", "hadamard"],
+      "names": ["h", "hadamard", "H", "HADAMARD"],
       "num_qubits": 1,
       "matrix": [
         ["1/sqrt(2)", "1/sqrt(2)"],
@@ -57,7 +57,7 @@
       ]
     },
     {
-      "names": ["s"],
+      "names": ["s", "S"],
       "num_qubits": 1,
       "matrix": [
         [1, 0],
@@ -65,7 +65,7 @@
       ]
     },
     {
-      "names": ["t"],
+      "names": ["t", "T"],
       "num_qubits": 1,
       "matrix": [
         [1, 0],
@@ -73,7 +73,7 @@
       ]
     },
     {
-      "names": ["cz"],
+      "names": ["cz", "CZ"],
       "num_qubits": 2,
       "matrix": [
         [1, 0, 0, 0],
@@ -83,7 +83,7 @@
       ]
     },
     {
-      "names": ["swap"],
+      "names": ["swap", "SWAP"],
       "num_qubits": 2,
       "matrix": [
         [1, 0, 0, 0],
@@ -93,7 +93,7 @@
       ]
     },
     {
-      "names": ["rx"],
+      "names": ["rx", "RX"],
       "num_qubits": 1,
       "parameters": ["theta"],
       "matrix": [

@@ -9,6 +9,7 @@
 #include <variant>
 #include <cstdio>
 #include <nlohmann/json.hpp>
+#include "ScopeManager.hpp"
 #include "ir.hpp"
 using json = nlohmann::json;
 

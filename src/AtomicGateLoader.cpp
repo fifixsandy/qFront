@@ -1,5 +1,4 @@
 #include "../inc/AtomicGateLoader.hpp"
-
 std::vector<GateDef> loadGates(const std::string& filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
@@ -22,7 +21,6 @@ std::vector<GateDef> loadGates(const std::string& filename) {
         AtomicGateSemantics sem;
         sem.matrix = g["matrix"].dump();
         def.semantics = sem;
-
         gates.push_back(std::move(def));
     }
     return gates;

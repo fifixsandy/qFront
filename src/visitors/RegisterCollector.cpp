@@ -1,7 +1,7 @@
 /**
  * @file RegisterCollector.cpp
  * @author Filip Novak
- * @date 2025-12-13
+ * @date 2025-12-20
  * 
  * Implements the RegisterCollector visitor, which traverses the OpenQASM 3
  * parse tree and populates the IR with register declarations.
@@ -14,7 +14,7 @@
 #include "../../inc/visitors/RegisterCollector.hpp"
 #include "../../inc/utils.hpp"
 
-RegisterCollector::RegisterCollector(IR& ir) : _ir(ir) {}
+RegisterCollector::RegisterCollector(IR& ir, ScopeManager& scopes) : _ir(ir), _scopes(scopes) {}
 
 std::any RegisterCollector::visitQuantumDeclarationStatement(
     qasm3Parser::QuantumDeclarationStatementContext *ctx) {
@@ -37,10 +37,18 @@ std::any RegisterCollector::visitQuantumDeclarationStatement(
         }
     } else {
         reg.kind = RegisterKind::Nonparametric;
-        reg.size = 1;
+        reg.size = "1";
     }
 
-    _ir.addRegister(reg);
+    auto id = _ir.addRegister(reg);
+
+    _scopes.addSymbol(Symbol{
+        .name = reg.name,
+        .kind = SymbolKind::Register,
+        .ir_ref = id,
+    });
+
+
     return nullptr;
 }
 
