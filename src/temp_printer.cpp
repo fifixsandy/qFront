@@ -8,18 +8,43 @@
 static std::string indent(int n) {
     return std::string(n, ' ');
 }
+void printGateStmt(const GateStmt& stmt, int indentLvl);
+
 void printGatePlacement(const GatePlacement& p, int indentLvl) {
     std::cout << indent(indentLvl)
               << "GatePlacement(.gate_id = " << p.gate_id
               << ", .inputs = {";
-
     for (size_t i = 0; i < p.relativeInputs.size(); ++i) {
         std::cout << p.relativeInputs[i];
         if (i + 1 < p.relativeInputs.size())
             std::cout << ", ";
     }
-    std::cout << "})";
+    std::cout << "})" << std::endl;
 }
+
+void printRepeatBlock(const RepeatBlock& r, int indentLvl) {
+    std::cout << indent(indentLvl)
+              << "RepeatBlock(.count = " << r.count
+              << ", .body = [" << std::endl;
+
+    for (const auto& stmt : r.body) {
+        printGateStmt(stmt, indentLvl + 1);
+    }
+
+    std::cout << indent(indentLvl) << "])" << std::endl;
+}
+
+void printGateStmt(const GateStmt& stmt, int indentLvl) {
+std::visit([indentLvl](auto&& s){
+    using T = std::decay_t<decltype(s)>;
+    if constexpr (std::is_same_v<T, GatePlacement>)
+        printGatePlacement(s, indentLvl);
+    else if constexpr (std::is_same_v<T, RepeatBlock>)
+        printRepeatBlock(s, indentLvl);
+}, stmt);
+
+}
+
 
 void printGate(const GateDef& gate, const IR& ir, int indentLvl) {
     std::cout << indent(indentLvl) << "Gate(\n";
@@ -41,9 +66,9 @@ void printGate(const GateDef& gate, const IR& ir, int indentLvl) {
         std::cout << indent(indentLvl + 2)
                   << "Composition({\n";
 
-        for (const auto& placement : body) {
-            printGatePlacement(placement, indentLvl + 4);
-            std::cout << ",\n";
+        for (const auto& stmt : body) {
+            printGateStmt(stmt, indentLvl + 4);
+            std::cout << ",";
         }
 
         std::cout << indent(indentLvl + 2)

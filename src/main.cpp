@@ -46,6 +46,7 @@ int main(int argc, const char* argv[]) {
         sym.name = gate.name;
         sym.aliases = gate.aliases;
         sym.ir_ref = id;
+        sym.kind = SymbolKind::Gate;
         scopes.addSymbol(std::move(sym));
     }
     RegisterCollector regColector(ir, scopes);

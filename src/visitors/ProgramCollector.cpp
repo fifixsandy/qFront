@@ -22,9 +22,15 @@ std::any ProgramCollector::visitGateCallStatement(
     GateApplication application;
 
     auto gate_name = ctx->Identifier()->getText();
-    application.gate_id = _ir.getGateId(gate_name);
-    auto operandCtxs = ctx->gateOperandList()->gateOperand();
+    auto* sym = _scopes.lookupSymbol(gate_name);
+    if (!sym || sym->kind != SymbolKind::Gate) {
+        throw std::runtime_error("Unknown gate: " + gate_name);
+    }
+
+    application.gate_id = std::get<size_t>(sym->ir_ref);
     _ir.markGateUsed(application.gate_id);
+
+    auto operandCtxs = ctx->gateOperandList()->gateOperand();
 
     for (auto* operandCtx : operandCtxs) {
         auto* indexed = operandCtx->indexedIdentifier();
@@ -35,7 +41,13 @@ std::any ProgramCollector::visitGateCallStatement(
         std::string operandName = indexed->Identifier()->getText();
 
         RegisterRef ref;
-        ref.reg_id = _ir.getRegisterId(operandName);
+        auto* sym = _scopes.lookupSymbol(operandName);
+        if (!sym || sym->kind != SymbolKind::Register) {
+            throw std::runtime_error("Unknown register: " + operandName);
+        }
+
+        ref.reg_id = std::get<size_t>(sym->ir_ref);
+
 
         if (!indexed->indexOperator().empty()) {
             auto firstIndexOp = indexed->indexOperator(0); // pick first IndexOperatorContext
@@ -64,10 +76,17 @@ std::any ProgramCollector::visitGateCallStatement(
 std::any ProgramCollector::visitForStatement(
     qasm3Parser::ForStatementContext *ctx) {
 
+    _scopes.enterScope(ScopeKind::Block);
     auto loop = std::make_unique<LoopApplication>();
 
     loop->type = ctx->scalarType()->getText();
     loop->variable = ctx->Identifier()->getText();
+
+    _scopes.addSymbol(Symbol{
+        .name = loop->variable,
+        .kind = SymbolKind::Var,
+    });
+
     if (auto *range = ctx->rangeExpression()) {
         Interval interval;
 
@@ -97,6 +116,7 @@ std::any ProgramCollector::visitForStatement(
     program_stack.pop_back();
 
     program_stack.back()->push_back(std::move(loop));
+    _scopes.exitScope();
     return nullptr;
 }
 
