@@ -2,56 +2,14 @@
  * @file GateBodyCollector.cpp
  * @author Filip Novak
  * @date 2025-12-20
- * 
- * Implements the GateBodyCollector visitor, which traverses the OpenQASM 3
- * parse tree and populates the IR gates with the bodies.
+ * @brief Visitor methods for collecting gate body statements
  */
 
-#include "../../inc/visitors/GateBodyCollector.hpp"
+#include "../../inc/visitors/ProgramCollector.hpp"
 #include "utils.hpp"
 
-GateBodyCollector::GateBodyCollector(IR& ir, ScopeManager& scopes) : _ir(ir), _scopes(scopes) {}
-
-std::any GateBodyCollector::visitGateStatement(
-    qasm3Parser::GateStatementContext *ctx) {
-    current_gate = &_ir.getGate(ctx->Identifier()->getText());
-    _scopes.enterScope(ScopeKind::GateOrSubroutine);
-
-    // adding qubit identifiers to current scope - they can shadow
-    // symbols from outer scopes
-    for (const auto& q : current_gate->argument_qubits) {
-        _scopes.addSymbol(Symbol{
-            .name = q,
-            .kind = SymbolKind::Qubit,
-        });
-    }
-
-    // adding parameter identifiers to current scope - they can shadow
-    // symbols from outer scopes
-    for (const auto& p : current_gate->parameters) {
-        _scopes.addSymbol(Symbol{
-            .name = p,
-            .kind = SymbolKind::Parameter,
-        });
-    }
-
-    auto& top_body = std::get<CompositeGateBody>(current_gate->semantics).body;
-    body_stack.push_back(&top_body);
-
-    visit(ctx->scope());
-
-    body_stack.pop_back();
-
-    // leaving, reset scopes
-    current_gate = nullptr;
-    _scopes.exitScope();
-    return nullptr;
-}
-
-
-std::any GateBodyCollector::visitGateCallStatement(
+std::any ProgramCollector::gateBody_visitGateCallStatement(
     qasm3Parser::GateCallStatementContext* ctx) {
-    if (!current_gate) {return nullptr;} // gate call not in gate body definition
     GatePlacement placement;
 
     placement.gate_name = ctx->Identifier()->getText();
@@ -96,9 +54,8 @@ std::any GateBodyCollector::visitGateCallStatement(
     return nullptr;
 }
 
-std::any GateBodyCollector::visitForStatement(
+std::any ProgramCollector::gateBody_visitForStatement(
     qasm3Parser::ForStatementContext *ctx) {
-    if (!current_gate) return nullptr;
 
     RepeatBlock loop;
 
@@ -136,3 +93,4 @@ std::any GateBodyCollector::visitForStatement(
     return nullptr;
 }
 
+/** EOF GateBodyCollector.cpp */

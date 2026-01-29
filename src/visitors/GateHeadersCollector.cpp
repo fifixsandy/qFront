@@ -55,4 +55,46 @@ std::any GateHeadersCollector::visitGateStatement(
     return nullptr;
 }
 
+std::any GateHeadersCollector::visitDefStatement(
+    qasm3Parser::DefStatementContext* ctx) {
+    
+    SubroutineDef subroutine;
+    subroutine.name = ctx->Identifier()->getText();
+    if (ctx->argumentDefinitionList()) {
+        for (auto* paramCtx : ctx->argumentDefinitionList()->argumentDefinition()) {
+            ParameterDef param;
+            param.name = paramCtx->Identifier()->getText();
+
+            if (paramCtx->scalarType()) {
+                param.type = paramCtx->scalarType()->getText();
+            }
+            else if (paramCtx->qubitType() || paramCtx->QREG()) {
+                param.type = "qubit";
+            }
+            else if (paramCtx->arrayReferenceType()) {
+                param.type = paramCtx->arrayReferenceType()->getText();
+            }
+            else {
+                throw std::runtime_error("Unsupported argument type in subroutine");
+            }
+
+            subroutine.parameters.push_back(param);
+        }
+    }
+    if (ctx->returnSignature()) {
+        subroutine.return_type = ctx->returnSignature()->scalarType()->getText();
+    }
+
+    std::string name = ctx->Identifier()->getText();
+    auto id = _ir.addSubroutine(std::move(subroutine));
+
+    _scopes.addSymbol(Symbol{
+        .name = name,
+        .kind = SymbolKind::Subroutine,
+        .ir_ref = id,
+    });
+
+    return nullptr;
+}
+
 /* EOF GateHeadersCollector*/

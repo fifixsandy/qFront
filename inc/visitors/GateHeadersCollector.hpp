@@ -17,6 +17,7 @@ public:
     GateHeadersCollector(IR& ir, ScopeManager& scopes);
 
     std::any visitGateStatement(qasm3Parser::GateStatementContext *ctx) override;
+    std::any visitDefStatement(qasm3Parser::DefStatementContext* ctx) override;
 
 private:
     IR& _ir;

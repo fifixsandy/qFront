@@ -7,6 +7,7 @@
 
 #include "ScopeManager.hpp"
 #include <stdexcept>
+#include <iostream>
 
 ScopeManager::ScopeManager() {
     enterScope(ScopeKind::Global);
@@ -61,7 +62,6 @@ void ScopeManager::addSymbol(const Symbol& symbol) {
 const Symbol* ScopeManager::lookupSymbol(const std::string& name) const {
     bool fromGateOrSubroutine = false;
     for (auto it = _scopes.rbegin(); it != _scopes.rend(); ++it) { // check each scope
-
         if (it->kind == ScopeKind::GateOrSubroutine) // in gate def/subroutine
             fromGateOrSubroutine = true;
 
