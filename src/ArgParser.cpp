@@ -11,7 +11,7 @@ void ArgParser::printUsage(const char* program_name) {
     std::cerr << "Usage: " << program_name << " [OPTIONS]\n\n";
     std::cerr << "Options:\n";
     std::cerr << "  -t, --target <target>    Output target (default: stim)\n";
-    std::cerr << "                           Available: stim, autoq\n";
+    std::cerr << "                           Available: stim, autoq-para\n";
     std::cerr << "  -f, --file <input.qasm>  Input OpenQASM file (default: stdin)\n";
     std::cerr << "  -o, --output <output>    Output file (default: stdout)\n";
     std::cerr << "  -h, --help               Show this help message\n\n";
@@ -54,9 +54,9 @@ ArgParser::Args ArgParser::parse(int argc, const char* argv[]) {
         }
     }
 
-    if (args.target != "stim" && args.target != "autoq") {
+    if (args.target != "stim" && args.target != "autoq-para") {
         throw std::runtime_error("Unknown target: " + args.target + 
-                                 " (valid: stim, autoq)");
+                                 " (valid: stim, autoq-para)");
     }
 
     return args;

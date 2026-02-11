@@ -25,13 +25,12 @@ private:
     void printAtomicGate(const GateApplication& app, const GateDef &gdef, const IR& ir, std::ostream& out);
     void printCompositeGate(const GateApplication& app, const GateDef &gdef, const IR& ir, std::ostream& out);
     void printGate(const GateApplication& app, const IR& ir, std::ostream& out);
-    void printToffoli(const std::vector<RegisterRef>& ops, const IR& ir, std::ostream& out);
     void printBlock(const Block& block, const IR& ir, std::ostream& out);
     void printProgramNode(const ProgramNodeBase& node, const IR& ir, std::ostream& out);
     
     const std::unordered_map<std::string, std::string> _gate_map = {
         {"h", "H"}, {"x", "X"}, {"y", "Y"}, {"z", "Z"},
-        {"s", "S"}, {"sdg", "S_DAG"}, {"t", "T"}, {"tdg", "T_DAG"},
+        {"s", "S"}, {"sdg", "S_DAG"}, 
         {"cx", "CNOT"}, {"cz", "CZ"}, {"measure", "M"}
     };
     

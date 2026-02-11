@@ -15,6 +15,7 @@
 #include "../inc/ScopeManager.hpp"
 #include "../inc/printers/Printer.hpp"
 #include "../inc/printers/StimPrinter.hpp"
+#include "../inc/printers/AutoQParaPrinter.hpp"
 #include "../inc/ArgParser.hpp"
 
 
@@ -25,10 +26,10 @@ std::unique_ptr<Printer> selectPrinter(const std::string& target) {
     if (target == "stim") {
         return std::make_unique<StimPrinter>();
     } 
-    // else if (target == "autoq") {
-    //     return std::make_unique<AutoQPrinter>();
-    // }
-    
+    else if (target == "autoq-para") {
+        return std::make_unique<AutoQParaPrinter>();
+    }
+
     throw std::runtime_error("Unknown target: " + target);
 }
 

@@ -55,8 +55,6 @@ void StimPrinter::printAtomicGate(const GateApplication& app,
             out << " " << resolveQubit(op, ir);
         }
         out << "\n";
-    } else if (gdef.name == "ccx") { // stim does not support toffoli, break it
-        printToffoli(app.operands, ir, out);
     } else {
         throw std::runtime_error("Unsupported atomic gate: " + gdef.name);
     }
@@ -82,25 +80,6 @@ void StimPrinter::printGate(const GateApplication& app, const IR& ir, std::ostre
 
 }
 
-void StimPrinter::printToffoli(const std::vector<RegisterRef>& ops, 
-                                  const IR& ir, std::ostream& out) {
-    if (ops.size() != 3) throw std::runtime_error("ccx needs 3 operands"); // TODO: Mby already in the semantic analysis?
-    size_t ctrl1 = resolveQubit(ops[0], ir);
-    size_t ctrl2 = resolveQubit(ops[1], ir);
-    size_t target = resolveQubit(ops[2], ir);
-    
-
-    out << "# Decomposed Toffoli " << ctrl1 << " " << ctrl2 << " " << target << ":\n"; 
-    // decompose toffoli
-    out << "H " << target << "\n";
-    out << "CNOT " << ctrl1 << " " << target << "\n";
-    out << "CNOT " << ctrl2 << " " << target << "\n";
-    out << "T " << target << "\n";
-    out << "CNOT " << ctrl2 << " " << target << "\n";
-    out << "T_DAG " << target << "\n";
-    out << "CNOT " << ctrl1 << " " << target << "\n";
-    out << "H " << target << "\n";
-}
 
 void StimPrinter::printBlock(const Block& block, const IR& ir, std::ostream& out) {
     out << "{\n";
