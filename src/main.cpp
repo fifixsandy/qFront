@@ -10,7 +10,6 @@
 #include "../inc/ir.hpp"
 #include "../inc/visitors/GateHeadersCollector.hpp"
 #include "../inc/visitors/ProgramCollector.hpp"
-#include "../inc/temp_printer.hpp"
 #include "../inc/AtomicGateLoader.hpp"
 #include "../inc/ScopeManager.hpp"
 #include "../inc/printers/Printer.hpp"
