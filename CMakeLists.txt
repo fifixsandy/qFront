@@ -8,6 +8,8 @@ include(FetchContent)
 FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.12.0/json.tar.xz)
 FetchContent_MakeAvailable(json)
 
+find_library(GMP_LIBRARY gmp)
+
 file(GLOB_RECURSE SRC_FILES "src/*.cpp" "src/**/*.cpp")
 add_executable(qfront
     ${SRC_FILES}
@@ -23,4 +25,7 @@ target_include_directories(qfront PRIVATE
     /usr/include/antlr4-runtime
 )
 
-target_link_libraries(qfront PRIVATE antlr4-runtime nlohmann_json::nlohmann_json)
+target_link_libraries(qfront PRIVATE antlr4-runtime
+                                     nlohmann_json::nlohmann_json
+                                     gmp
+                                     ${CMAKE_SOURCE_DIR}/libalgebraic_complex_numbers.a)
