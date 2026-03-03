@@ -23,6 +23,7 @@ target_include_directories(qfront PRIVATE
     /usr/local/include
     /usr/local/include/antlr4-runtime
     /usr/include/antlr4-runtime
+    /algebraic-complex-numbers/src
 )
 
 target_link_libraries(qfront PRIVATE antlr4-runtime

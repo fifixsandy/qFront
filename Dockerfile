@@ -9,8 +9,9 @@ RUN make -j4
 
 COPY . /qfront
 WORKDIR /qfront
+RUN cp /algebraic-complex-numbers/build/libalgebraic_complex_numbers.a ./
 
-RUN cp /algebraic-complex-numbers/build/libalgebraic_complex_numbers.a /qfront/libalgebraic_complex_numbers.a
-
+# RUN make runtime
 RUN make antlr
+
 RUN make -j4

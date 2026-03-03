@@ -27,6 +27,8 @@ public:
         return "AutoQ-Para circuit format"; 
     }
 
+    bool algebraic_matrices = false;
+
     AutoQParaPrinter() = default;
 
     ~AutoQParaPrinter() = default;

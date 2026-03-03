@@ -19,6 +19,10 @@
 #include <memory>
 #include <optional>
 
+#include "matrix.hpp"
+
+using ACN = AlgebraicComplexNumber<DenseNumberStore>;
+
 using idGate = std::size_t;
 using idRegister = std::size_t;
 
@@ -65,9 +69,14 @@ enum class GateKind {
 };
 
 struct AtomicGateSemantics {
-    std::string matrix;
-};
+    ComplexMatrix<ACN> algebraic_matrix;
+    std::string string_matrix;
 
+    AtomicGateSemantics(ComplexMatrix<ACN> matrix,
+                        std::string str)
+        : algebraic_matrix(std::move(matrix)),
+          string_matrix(std::move(str)) {}
+};
 
 struct GatePlacement {
     idGate gate_id;
@@ -102,7 +111,7 @@ struct GateDef {
     std::unordered_map<std::string, std::size_t> parameter_index;
 
     GateKind kind;
-    std::variant<AtomicGateSemantics, CompositeGateBody> semantics;
+    std::variant<CompositeGateBody, AtomicGateSemantics> semantics;
     bool used = false;
 };
 struct ProgramNodeBase;

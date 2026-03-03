@@ -125,8 +125,19 @@ void AutoQParaPrinter::printGate(const GateDef& gate, const IR& ir, int indentLv
 
     if (gate.kind == GateKind::Atomic) {
         const auto& sem = std::get<AtomicGateSemantics>(gate.semantics);
-        out << indent(indentLvl + 2)
-            << "Matrix(" << sem.matrix << ")\n";
+
+        out << indent(indentLvl + 2) << "Matrix(";
+
+        if (this->algebraic_matrices) {
+            auto matrix = sem.algebraic_matrix;  
+            out << matrix;
+        } else {
+            auto matrix = sem.string_matrix;
+            out << matrix;
+        }
+
+        out << ")\n";
+
     } else {
         const auto& body = std::get<CompositeGateBody>(gate.semantics).body;
 

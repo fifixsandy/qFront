@@ -21,12 +21,15 @@
 using namespace antlr4;
 
 
-std::unique_ptr<Printer> selectPrinter(const std::string& target) {
+std::unique_ptr<Printer> selectPrinter(const std::string& target, 
+                                       bool algebraic_matrices) {
     if (target == "stim") {
         return std::make_unique<StimPrinter>();
     } 
     else if (target == "autoq-para") {
-        return std::make_unique<AutoQParaPrinter>();
+        auto printer = std::make_unique<AutoQParaPrinter>();
+        printer->algebraic_matrices = algebraic_matrices;
+        return printer;
     }
 
     throw std::runtime_error("Unknown target: " + target);
@@ -76,7 +79,7 @@ int main(int argc, const char* argv[]) {
     ScopeManager scopes;
 
     try {
-        auto gates = loadGates("gates.json");
+        auto gates = loadGates("json_gates/intgates.json", args.use_algebraic, args.algebraic_precision);
         for (const auto& gate : gates) {
             auto id = ir.addGate(gate);
             Symbol sym;
@@ -105,7 +108,7 @@ int main(int argc, const char* argv[]) {
 
     std::unique_ptr<Printer> printer;
     try {
-        printer = selectPrinter(args.target);
+        printer = selectPrinter(args.target, args.use_algebraic);
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << "\n";
         return 1;

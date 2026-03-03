@@ -11,6 +11,10 @@
 #include <nlohmann/json.hpp>
 #include "ScopeManager.hpp"
 #include "ir.hpp"
+#include "matrix.hpp"
+#include "matrix_constructs.hpp"
+
 using json = nlohmann::json;
 
-std::vector<GateDef> loadGates(const std::string& filename);
+std::vector<GateDef> loadGates(const std::string& filename, bool algebraic, unsigned precision);
+ComplexMatrix<ACN> createAlgebraicMatrix(const std::string& json_str, unsigned precision);
