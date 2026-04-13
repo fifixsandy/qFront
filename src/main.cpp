@@ -124,6 +124,15 @@ int main(int argc, const char* argv[]) {
         return 1;
     }
 
+    try {
+        if (args.merge_registers) {
+            passes::mergeRegisters(ir);
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "Error during register merging: " << e.what() << "\n";
+        return 1;
+    }
+
     std::unique_ptr<Printer> printer;
     try {
         printer = selectPrinter(args.target, args.use_algebraic);

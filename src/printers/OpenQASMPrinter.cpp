@@ -20,6 +20,10 @@ void OpenQASMPrinter::printHeader(std::ostream& out) {
 
 void OpenQASMPrinter::printRegisters(const IR& ir, std::ostream& out) {
     for (const auto& reg : ir.getAllRegisters()) {
+        if (reg.size == "0") {
+            // skip zero-size registers (e.g. removed by optimizations)
+            continue;
+        }
         switch (reg.type) {
             case RegisterType::Qubit:
                 if (version >= 3) {

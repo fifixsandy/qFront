@@ -18,4 +18,16 @@ void inlineCompositeGates(IR& ir);
  */
 void decomposeMCX(IR& ir);
 
+
+/**
+ * @brief Merges registers into one register when possible to reduce the total number of registers used.
+ * 
+ * @param ir The IR context to modify
+ * 
+ * @warning This pass will merge all Nonparametric qubit registers with constant integer sizes into a 
+ *          single register named "__merged_qubits" and rename the merged registers "__unused" with size "0".
+ *          Should be skipped during emitting.
+ */
+void mergeRegisters(IR& ir);
+
 } // namespace passes

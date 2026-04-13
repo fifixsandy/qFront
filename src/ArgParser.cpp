@@ -16,7 +16,8 @@ void ArgParser::printUsage(const char* program_name) {
     std::cerr << "  -o, --output <output>        Output file (default: stdout)\n";
     std::cerr << "  -a, --algebraic <precision>  Enable algebraic matrices (default: off, 32)\n";
     std::cerr << "  -h, --help                   Show this help message\n";
-    std::cerr << "  --decompose-mcx              Decompose mcx gates into x, cx, and ccx gates (ancilla qubits added as needed)\n";
+    std::cerr << "  --decompose-mcx              Decompose mcx gates into x, cx, and ccx gates (ancilla qubits added as needed, default: off)\n";
+    std::cerr << "  --merge-registers            Merge all constant-size Nonparametric qubit registers into one (default: off)\n";
     std::cerr << "Examples:\n";
     std::cerr << "  " << program_name << " -t stim -f circuit.qasm -o circuit.stim\n";
     std::cerr << "  " << program_name << " -f circuit.qasm < input.qasm\n";
@@ -66,7 +67,9 @@ ArgParser::Args ArgParser::parse(int argc, const char* argv[]) {
             }
         } else if (arg == "--decompose-mcx") {
             args.decompose_mcx = true;
-        }
+        } else if (arg == "--merge-registers") {
+            args.merge_registers = true;
+         }
         else {
             throw std::invalid_argument("Unknown option: " + arg);
         }

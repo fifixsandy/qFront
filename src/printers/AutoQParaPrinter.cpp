@@ -68,6 +68,10 @@ void AutoQParaPrinter::printRegisterTable(const IR& ir, std::ostream& out) const
 
     const auto& regs = ir.getAllRegisters();
     for (size_t i = 0; i < regs.size(); ++i) {
+        if (regs[i].size == "0") {
+            // skip zero-size registers (e.g. removed by optimizations)
+            continue;
+        }
         printRegister(regs[i], 2, out);
         if (i + 1 < regs.size()) out << ",";
         out << "\n";

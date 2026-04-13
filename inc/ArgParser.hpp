@@ -20,6 +20,7 @@ public:
         bool use_algebraic = false;
         unsigned algebraic_precision = 32;
         bool decompose_mcx = false;
+        bool merge_registers = false;
     };
 
     static Args parse(int argc, const char* argv[]);
