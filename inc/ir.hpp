@@ -256,9 +256,12 @@ public:
     std::size_t addRegister(const RegisterDef& def);
     const RegisterDef& getRegister(std::size_t id) const;
     const RegisterDef& getRegister(const std::string& name) const;
+    RegisterDef& getRegister(std::size_t id);
+    RegisterDef& getRegister(const std::string& name);
     const idRegister getRegisterId(std::string name) const;
     const std::vector<RegisterDef> getAllRegisters() const;
     bool hasRegister(const std::string& name) const;
+    void removeRegister(std::size_t id);
 
     // Gates
     std::size_t addGate(const GateDef& def);
@@ -271,6 +274,8 @@ public:
     bool hasGate(const std::string& name) const;
     void markGateUsed(const std::string& name);
     void markGateUsed(std::size_t id);
+    void markGateUnused(const std::string& name);
+    void markGateUnused(std::size_t id);
 
 
     // Subroutines

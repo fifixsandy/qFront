@@ -14,8 +14,9 @@ void ArgParser::printUsage(const char* program_name) {
     std::cerr << "                               Available: stim, autoq-para\n";
     std::cerr << "  -f, --file <input.qasm>      Input OpenQASM file (default: stdin)\n";
     std::cerr << "  -o, --output <output>        Output file (default: stdout)\n";
-    std::cerr << "  -a, --algebraic <precision>  Enable algebraic matrices (default: off, 32-bit when on)\n";
-    std::cerr << "  -h, --help                   Show this help message\n\n";
+    std::cerr << "  -a, --algebraic <precision>  Enable algebraic matrices (default: off, 32)\n";
+    std::cerr << "  -h, --help                   Show this help message\n";
+    std::cerr << "  --decompose-mcx              Decompose mcx gates into x, cx, and ccx gates (ancilla qubits added as needed)\n";
     std::cerr << "Examples:\n";
     std::cerr << "  " << program_name << " -t stim -f circuit.qasm -o circuit.stim\n";
     std::cerr << "  " << program_name << " -f circuit.qasm < input.qasm\n";
@@ -63,15 +64,20 @@ ArgParser::Args ArgParser::parse(int argc, const char* argv[]) {
                     --i;
                 }
             }
+        } else if (arg == "--decompose-mcx") {
+            args.decompose_mcx = true;
         }
         else {
             throw std::invalid_argument("Unknown option: " + arg);
         }
     }
 
-    if (args.target != "stim" && args.target != "autoq-para") {
+    if (args.target != "stim" && 
+        args.target != "autoq-para" && 
+        args.target != "openqasm3" && 
+        args.target != "openqasm2") {
         throw std::invalid_argument("Unknown target: " + args.target + 
-                                 " (valid: stim, autoq-para)");
+                                 " (valid: stim, autoq-para, openqasm3, openqasm2)");
     }
 
     return args;

@@ -33,6 +33,23 @@ const RegisterDef& IR::getRegister(const std::string& name) const {
     return registers[it->second];
 }
 
+RegisterDef& IR::getRegister(std::size_t id) {
+    return registers[id];
+}
+
+RegisterDef& IR::getRegister(const std::string& name) {
+    return registers[register_table.at(name)];
+}
+
+void IR::removeRegister(std::size_t id) {
+    if (id >= registers.size()) {
+        throw std::out_of_range("Invalid register id");
+    }
+    const std::string name = registers[id].name;
+    register_table.erase(name);
+    registers.erase(registers.begin() + id);
+}
+
 const idRegister IR::getRegisterId(std::string name) const {
     auto it = register_table.find(name);
     if (it == register_table.end()) {
@@ -104,6 +121,21 @@ void IR::markGateUsed(const std::string& name) {
         throw std::runtime_error("Unknown gate: " + name);
     }
     gates[it->second].used = true;
+}
+
+void IR::markGateUnused(std::size_t id) {
+    if (id >= gates.size()) {
+        throw std::out_of_range("Invalid gate id");
+    }
+    gates[id].used = false;
+}
+
+void IR::markGateUnused(const std::string& name) {
+    auto it = gate_table.find(name);
+    if (it == gate_table.end()) {
+        throw std::runtime_error("Unknown gate: " + name);
+    }
+    gates[it->second].used = false;
 }
 
 

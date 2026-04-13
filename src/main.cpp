@@ -15,8 +15,9 @@
 #include "../inc/printers/Printer.hpp"
 #include "../inc/printers/StimPrinter.hpp"
 #include "../inc/printers/AutoQParaPrinter.hpp"
+#include "../inc/printers/OpenQASMPrinter.hpp"
 #include "../inc/ArgParser.hpp"
-
+#include "../inc/Passes.hpp"
 
 using namespace antlr4;
 
@@ -30,7 +31,15 @@ std::unique_ptr<Printer> selectPrinter(const std::string& target,
         auto printer = std::make_unique<AutoQParaPrinter>();
         printer->algebraic_matrices = algebraic_matrices;
         return printer;
-    }
+    } else if (target == "openqasm3") {
+        auto printer = std::make_unique<OpenQASMPrinter>();
+        printer->version = 3.0;
+        return printer;
+    } else if (target == "openqasm2") {
+        auto printer = std::make_unique<OpenQASMPrinter>();
+        printer->version = 2.0;
+        return printer;
+     }
 
     throw std::runtime_error("Unknown target: " + target);
 }
@@ -79,7 +88,7 @@ int main(int argc, const char* argv[]) {
     ScopeManager scopes;
 
     try {
-        auto gates = loadGates("json_gates/intgates.json", args.use_algebraic, args.algebraic_precision);
+        auto gates = loadGates("json_gates/gates.json", args.use_algebraic, args.algebraic_precision);
         for (const auto& gate : gates) {
             auto id = ir.addGate(gate);
             Symbol sym;
@@ -103,6 +112,15 @@ int main(int argc, const char* argv[]) {
         program_collector.visit(tree);
     } catch (const std::exception& e) {
         std::cerr << "Error during IR construction: " << e.what() << "\n";
+        return 1;
+    }
+
+    try {
+        if (args.decompose_mcx) {
+           passes::decomposeMCX(ir);
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "Error during MCX decomposition: " << e.what() << "\n";
         return 1;
     }
 

@@ -19,6 +19,7 @@ public:
         std::string output_file = "";
         bool use_algebraic = false;
         unsigned algebraic_precision = 32;
+        bool decompose_mcx = false;
     };
 
     static Args parse(int argc, const char* argv[]);

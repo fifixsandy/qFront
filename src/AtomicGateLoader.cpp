@@ -24,7 +24,7 @@ std::vector<GateDef> loadGates(const std::string& filename,
         ComplexMatrix<ACN> matrix = 
         algebraic
             ? createAlgebraicMatrix(stringMatrix, precision)
-            : createAlgebraicMatrix(stringMatrix, precision);  // TODO: some placeholder
+            : createAlgebraicMatrixStub(2);  // TODO: some placeholder
 
         AtomicGateSemantics sem(std::move(matrix), std::move(stringMatrix));
 
@@ -54,6 +54,14 @@ std::vector<GateDef> loadGates(const std::string& filename,
     }
 
     return gates;
+}
+
+ComplexMatrix<ACN> createAlgebraicMatrixStub(unsigned precision) {
+    ACN zero(precision);
+    MatrixBaker<ACN> baker{ &zero };
+
+    // 1x1 zero matrix stub - replace with actual matrix when needed
+    return baker.square_acn_matrix_from_ints({ 0 });
 }
 
 ComplexMatrix<ACN> createAlgebraicMatrix(const std::string& json_str,
