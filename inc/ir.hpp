@@ -82,6 +82,7 @@ struct GatePlacement {
     idGate gate_id;
     std::string gate_name;
     std::vector<size_t> relativeInputs;
+    std::vector<std::string> params; // for parametric gates, e.g. RZ(phi)
 };
 
 struct RepeatBlock;
@@ -136,6 +137,7 @@ struct ProgramNodeBase {
 struct GateApplication : ProgramNodeBase {
     idGate gate_id;
     std::vector<RegisterRef> operands;
+    std::vector<std::string> params; // for parametric gates, e.g. RZ(phi)
 };
 
 struct Interval {

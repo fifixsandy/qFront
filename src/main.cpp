@@ -18,6 +18,7 @@
 #include "../inc/printers/OpenQASMPrinter.hpp"
 #include "../inc/ArgParser.hpp"
 #include "../inc/Passes.hpp"
+//#include "../inc/printers/StatsPrinter.hpp"
 
 using namespace antlr4;
 
@@ -39,7 +40,12 @@ std::unique_ptr<Printer> selectPrinter(const std::string& target,
         auto printer = std::make_unique<OpenQASMPrinter>();
         printer->version = 2.0;
         return printer;
-     }
+    }
+    // } else if (target == "stats") {
+    //     //auto printer = std::make_unique<StatsPrinter>();
+    //     //return printer;
+
+    // }
 
     throw std::runtime_error("Unknown target: " + target);
 }

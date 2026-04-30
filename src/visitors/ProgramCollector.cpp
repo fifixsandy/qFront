@@ -62,6 +62,12 @@ std::any ProgramCollector::inProgram_visitGateCallStatement(
         application->operands.push_back(std::move(ref));
     }
 
+    if (ctx->expressionList()) {
+        for (auto* expr : ctx->expressionList()->expression()) {
+            application->params.push_back(expr->getText());
+        }
+    }
+
     block_stack.back()->body.push_back(std::move(application));
     return nullptr;
 }

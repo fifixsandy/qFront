@@ -47,6 +47,12 @@ std::any ProgramCollector::gateBody_visitGateCallStatement(
 
     }
 
+    if (ctx->expressionList()) {
+        for (auto* expr : ctx->expressionList()->expression()) {
+            placement.params.push_back(expr->getText());
+        }
+    }
+
     if (body_stack.empty())
         throw std::runtime_error("No active gate body to append gate call");
     body_stack.back()->push_back(std::move(placement));

@@ -6,6 +6,7 @@
 
 #include "../../inc/ir.hpp"
 #include "../../inc/printers/OpenQASMPrinter.hpp"
+#include <iomanip> // for std::setprecision
 
 void OpenQASMPrinter::print(const IR& ir, std::ostream& out) {
     printHeader(out);
@@ -14,7 +15,10 @@ void OpenQASMPrinter::print(const IR& ir, std::ostream& out) {
 }
 
 void OpenQASMPrinter::printHeader(std::ostream& out) {
-    out << "OPENQASM " << version << ";\n";
+    out << "OPENQASM "
+    << std::fixed << std::setprecision(1)
+    << version
+    << ";\n";
     out << "include \"qelib1.inc\";\n\n"; // TODO: include based on loaded program
 }
 
@@ -84,6 +88,16 @@ void OpenQASMPrinter::printGateApplication(const GateApplication& app,
     const GateDef& gate = ir.getGate(app.gate_id);
     out << indent(depth) << gate.name;
 
+    // parameters such as rotation angles for parametric gates (e.g. RZ(phi))
+    if (!app.params.empty()) {
+    out << "(";
+    for (size_t i = 0; i < app.params.size(); ++i) {
+        out << (i == 0 ? "" : ",") << app.params[i];
+    }
+    out << ")";
+    }
+
+    // operands (qubit arguments)
     for (size_t i = 0; i < app.operands.size(); ++i) {
         out << (i == 0 ? " " : ",") << registerRefStr(app.operands[i], ir);
     }
