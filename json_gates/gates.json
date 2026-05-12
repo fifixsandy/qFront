@@ -100,6 +100,37 @@
         ["cos(theta/2)", "-i*sin(theta/2)"],
         ["-i*sin(theta/2)", "cos(theta/2)"]
       ]
+    },
+    {
+      "names": ["mcx", "MCX"],
+      "num_qubits": 0,
+      "matrix": "variable (1 control: cx, 2 controls: ccx, more controls: decomposed into cx and ccx)"
+    },
+    {
+      "names": ["rz", "RZ"],
+      "num_qubits": 1,
+      "parameters": ["phi"],
+      "matrix": [
+        ["exp(-i*phi/2)", 0],
+        [0, "exp(i*phi/2)"]
+      ]
+    }, 
+    {
+      "names": ["tdg", "TDG"],
+      "num_qubits": 1,
+      "matrix": [
+        [1, 0],
+        [0, "exp(-i*pi/4)"]
+      ]
+    },
+    {
+      "names": ["ry", "RY"],
+      "num_qubits": 1,
+      "parameters": ["theta"],
+      "matrix": [
+        ["cos(theta/2)", "-sin(theta/2)"],
+        ["sin(theta/2)", "cos(theta/2)"]
+      ]
     }
   ]
 }

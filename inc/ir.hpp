@@ -166,7 +166,7 @@ struct LoopApplication : ProgramNodeBase {
 };
 
 struct ConditionalApplication : ProgramNodeBase {
-    std::string condition_expr;           // TODO: parse custom expression
+    std::string condition_expr;           
     std::vector<ProgramNodePtr> then_body;
     std::vector<ProgramNodePtr> else_body;
 };
@@ -191,7 +191,7 @@ enum class ParamMutability {
 struct ParameterDef {
     std::string name;
     //TypeExpr type;
-    std::string type; // todo change: to TypeExpr
+    std::string type; 
     ParamPassing passing;
     ParamMutability mutability;
 };
@@ -247,7 +247,7 @@ struct VariableDef {
     TypeExpr type;
     bool is_const;
     std::string compile_time_value;
-    std::string initializer; // todo change to expr
+    std::string initializer;
 };
 
 
@@ -292,6 +292,7 @@ public:
     void markSubroutineUsed(const std::string& name);
     void markSubroutineUsed(std::size_t id);
 
+    int resolveLoopCount(const LoopValues& values) const;
 
     Block& getGlobalBlock();
     const Block& getGlobalBlock() const;

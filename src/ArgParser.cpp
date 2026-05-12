@@ -11,13 +11,14 @@ void ArgParser::printUsage(const char* program_name) {
     std::cerr << "Usage: " << program_name << " [OPTIONS]\n\n";
     std::cerr << "Options:\n";
     std::cerr << "  -t, --target <target>        Output target (default: stim)\n";
-    std::cerr << "                               Available: stim, autoq-para\n";
+    std::cerr << "                               Available: stim, autoq-para, openqasm3, openqasm2, stats, mosf\n";
     std::cerr << "  -f, --file <input.qasm>      Input OpenQASM file (default: stdin)\n";
     std::cerr << "  -o, --output <output>        Output file (default: stdout)\n";
     std::cerr << "  -a, --algebraic <precision>  Enable algebraic matrices (default: off, 32)\n";
     std::cerr << "  -h, --help                   Show this help message\n";
     std::cerr << "  --decompose-mcx              Decompose mcx gates into x, cx, and ccx gates (ancilla qubits added as needed, default: off)\n";
     std::cerr << "  --merge-registers            Merge all constant-size Nonparametric qubit registers into one (default: off)\n";
+    std::cerr << "  --evaluluate-angles          Evaluate angles in parameters of gates such as rx, ry, rz to double\n";
     std::cerr << "Examples:\n";
     std::cerr << "  " << program_name << " -t stim -f circuit.qasm -o circuit.stim\n";
     std::cerr << "  " << program_name << " -f circuit.qasm < input.qasm\n";
@@ -69,7 +70,9 @@ ArgParser::Args ArgParser::parse(int argc, const char* argv[]) {
             args.decompose_mcx = true;
         } else if (arg == "--merge-registers") {
             args.merge_registers = true;
-         }
+        } else if (arg == "--evaluate-angles") {
+            args.eval_angles = true;
+        }
         else {
             throw std::invalid_argument("Unknown option: " + arg);
         }
@@ -78,9 +81,11 @@ ArgParser::Args ArgParser::parse(int argc, const char* argv[]) {
     if (args.target != "stim" && 
         args.target != "autoq-para" && 
         args.target != "openqasm3" && 
-        args.target != "openqasm2") {
+        args.target != "openqasm2" &&
+        args.target != "stats" && 
+        args.target != "mosf") {
         throw std::invalid_argument("Unknown target: " + args.target + 
-                                 " (valid: stim, autoq-para, openqasm3, openqasm2)");
+                                 " (valid: stim, autoq-para, openqasm3, openqasm2, stats, mosf)");
     }
 
     return args;

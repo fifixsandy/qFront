@@ -18,7 +18,8 @@
 #include "../inc/printers/OpenQASMPrinter.hpp"
 #include "../inc/ArgParser.hpp"
 #include "../inc/Passes.hpp"
-//#include "../inc/printers/StatsPrinter.hpp"
+#include "../inc/printers/StatsPrinter.hpp"
+#include "../inc/printers/MOSFPrinter.hpp"
 
 using namespace antlr4;
 
@@ -40,12 +41,13 @@ std::unique_ptr<Printer> selectPrinter(const std::string& target,
         auto printer = std::make_unique<OpenQASMPrinter>();
         printer->version = 2.0;
         return printer;
+    } else if (target == "stats") {
+        auto printer = std::make_unique<StatsPrinter>();
+        return printer;
+    } else if (target == "mosf") {
+        auto printer = std::make_unique<MOSFPrinter>();
+        return printer;
     }
-    // } else if (target == "stats") {
-    //     //auto printer = std::make_unique<StatsPrinter>();
-    //     //return printer;
-
-    // }
 
     throw std::runtime_error("Unknown target: " + target);
 }
@@ -136,6 +138,15 @@ int main(int argc, const char* argv[]) {
         }
     } catch (const std::exception& e) {
         std::cerr << "Error during register merging: " << e.what() << "\n";
+        return 1;
+    }
+
+    try {
+        if (args.eval_angles) {
+            passes::evaluateAngles(ir);
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "Error during angles evaluation: " << e.what() << "\n";
         return 1;
     }
 

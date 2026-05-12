@@ -240,4 +240,25 @@ void IR::markSubroutineUsed(const std::string& name) {
     subroutines[it->second].used = true;
 }
 
+int IR::resolveLoopCount(const LoopValues& values) const {
+    if (std::holds_alternative<Interval>(values)) {
+        const auto& interval = std::get<Interval>(values);
+        try {
+            int start = std::stoi(interval.start);
+            int end = std::stoi(interval.end);
+            int step = std::stoi(interval.step);
+            return (step > 0) ? ((end - start + step) / step) : ((start - end - step) / (-step));
+        } catch (const std::exception& e) {
+            throw std::runtime_error("Cannot resolve loop count: non-integer bounds or step");
+        }
+    } else if (std::holds_alternative<std::vector<std::string>>(values)) {
+        return std::get<std::vector<std::string>>(values).size();
+    } else if (std::holds_alternative<std::string>(values)) {
+        // For identifier-based loops, we cannot resolve the count statically
+        throw std::runtime_error("Cannot resolve loop count: identifier-based loop");
+    } else {
+        throw std::runtime_error("Unknown LoopValues variant");
+    }
+}
+
 /* EOF ir.cpp */

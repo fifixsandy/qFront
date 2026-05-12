@@ -21,6 +21,7 @@ public:
         unsigned algebraic_precision = 32;
         bool decompose_mcx = false;
         bool merge_registers = false;
+        bool eval_angles = false;
     };
 
     static Args parse(int argc, const char* argv[]);
